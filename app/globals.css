@@ -11,9 +11,6 @@
   --user-text: #FAF9F6;
   --ai-bubble: #FFFFFF;
   --ai-text: #2C2C2C;
-  --system-bubble: #FEF3C7;
-  --system-text: #92400E;
-  --system-border: #F59E0B;
 }
 
 @theme inline {
@@ -27,9 +24,6 @@
   --color-user-text: var(--user-text);
   --color-ai-bubble: var(--ai-bubble);
   --color-ai-text: var(--ai-text);
-  --color-system-bubble: var(--system-bubble);
-  --color-system-text: var(--system-text);
-  --color-system-border: var(--system-border);
   --font-sans: var(--font-inter);
   --font-serif: var(--font-cormorant);
   --font-mono: var(--font-jetbrains);
@@ -47,9 +41,6 @@
     --user-text: #FEF3C7;
     --ai-bubble: #1F1F1D;
     --ai-text: #E8E6E3;
-    --system-bubble: #292521;
-    --system-text: #FBBF24;
-    --system-border: #F59E0B;
   }
 }
 

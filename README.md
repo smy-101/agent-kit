@@ -15,9 +15,6 @@ A beautifully designed, production-ready AI chat interface built with **Next.js 
 - **Code Blocks**: Copy-to-clipboard functionality
 - **Tool Calling**: Built-in support for AI tools (weather, conversions)
 - **Dark Mode**: Automatic theme switching with refined colors
-- **Message Roles**: Distinct styling for system, user, and assistant messages
-- **Context Management**: Toggle multi-turn context on/off for each conversation
-- **New Topic Reset**: One-click conversation reset with smooth transitions
 
 ### 🎨 Design Excellence
 - **Editorial Luxury Aesthetic**: Cormorant Garamond serif headings
@@ -27,9 +24,8 @@ A beautifully designed, production-ready AI chat interface built with **Next.js 
 
 ### ⚡ Performance Optimized
 - **Code Splitting**: Dynamic imports reduce initial bundle by 20%
-- **React.memo**: Custom comparison functions for efficient re-render prevention
-- **useCallback**: Stable function references with minimal dependencies
-- **useTransition**: Non-blocking UI updates for state changes
+- **React.memo**: Prevents unnecessary re-renders
+- **useCallback**: Stable function references
 - **Optimized Fonts**: next/font for optimal loading
 
 ### ♿ Accessibility First
@@ -91,7 +87,7 @@ pnpm start
 
 ### Project Structure
 
- ```
+```
 agent-kit/
 ├── app/
 │   ├── api/
@@ -102,10 +98,10 @@ agent-kit/
 │   └── globals.css                # Global styles & theme
 ├── components/
 │   └── chat/
-│       ├── ChatContainer.tsx      # Main chat orchestrator with context management
-│       ├── ChatInput.tsx          # Input with context toggle & new topic button
-│       ├── MessageList.tsx        # Scrollable message list (memoized)
-│       ├── MessageBubble.tsx      # Individual message with role-based styling
+│       ├── ChatContainer.tsx      # Main chat orchestrator
+│       ├── ChatInput.tsx          # Input with auto-resize
+│       ├── MessageList.tsx        # Scrollable message list
+│       ├── MessageBubble.tsx      # Individual message
 │       ├── MarkdownRenderer.tsx   # Markdown + syntax highlight
 │       └── ChatErrorBoundary.tsx  # Error boundary
 ├── tailwind.config.ts             # Tailwind configuration
@@ -134,13 +130,11 @@ agent-kit/
 - Background: `#FAF9F6` (Cream)
 - Foreground: `#2C2C2C` (Charcoal)
 - Accent: `#B45309` (Amber - WCAG AA compliant)
-- System Bubble: `#FEF3C7` (Light amber)
 
 **Dark Mode:**
 - Background: `#1A1A18` (Deep charcoal)
 - Foreground: `#E8E6E3` (Off-white)
 - Accent: `#F59E0B` (Warm amber)
-- System Bubble: `#292521` (Dark charcoal with amber border)
 
 ### Typography
 
@@ -221,8 +215,6 @@ See [PERFORMANCE.md](./PERFORMANCE.md) for detailed optimization guide.
 - `Shift + Enter` - New line
 - `Tab` - Navigate between elements
 - `Shift + Tab` - Navigate backwards
-- Toggle switch to enable/disable conversation context
-- "New Topic" button to clear all messages
 
 ## 🔒 Security
 
@@ -305,15 +297,7 @@ None at this time. Please report issues via GitHub Issues.
 
 ## 🔄 Changelog
 
-### v1.1.0 (Current)
-- ✨ **New**: Message role differentiation (system/user/assistant)
-- ✨ **New**: Multi-turn context toggle switch
-- ✨ **New**: "New Topic" button for instant conversation reset
-- ✅ **Enhanced**: Improved React performance with optimized memoization
-- ✅ **Enhanced**: Non-blocking UI updates with React transitions
-- ✅ **Fixed**: CSS indentation consistency
-
-### v1.0.0
+### v1.0.0 (Current)
 - ✨ Initial release
 - ✅ Real-time markdown rendering
 - ✅ Editorial luxury design
