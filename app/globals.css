@@ -3,12 +3,12 @@
 :root {
   --background: #FAF9F6;
   --foreground: #2C2C2C;
-  --accent: #C4A962;
-  --accent-light: #D4BC82;
+  --accent: #B45309;
+  --accent-light: #D97706;
   --border: #E5E5E5;
   --code-bg: #F5F5F3;
-  --user-bubble: #C4A962;
-  --user-text: #1A1A18;
+  --user-bubble: #B45309;
+  --user-text: #FAF9F6;
   --ai-bubble: #FFFFFF;
   --ai-text: #2C2C2C;
 }
@@ -33,12 +33,12 @@
   :root {
     --background: #1A1A18;
     --foreground: #E8E6E3;
-    --accent: #D4BC82;
-    --accent-light: #E8D4A0;
+    --accent: #F59E0B;
+    --accent-light: #FBBF24;
     --border: #3A3A38;
     --code-bg: #252523;
-    --user-bubble: #2A2A28;
-    --user-text: #E8E6E3;
+    --user-bubble: #92400E;
+    --user-text: #FEF3C7;
     --ai-bubble: #1F1F1D;
     --ai-text: #E8E6E3;
   }
@@ -47,7 +47,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.7;
 }
 

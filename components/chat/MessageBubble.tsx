@@ -12,7 +12,11 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
   const isUser = message.role === 'user';
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+    <div 
+      role="article"
+      aria-label={`${isUser ? 'Your message' : 'AI response'}`}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300`}
+    >
       <div className={`max-w-[85%] rounded-2xl px-6 py-4 shadow-sm ${
         isUser
           ? 'bg-user-bubble text-user-text'
@@ -36,6 +40,8 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
                 <div
                   key={`${message.id}-${i}`}
                   className="mt-2 p-4 rounded-lg bg-code-bg border border-accent"
+                  role="region"
+                  aria-label={part.type === 'tool-weather' ? 'Weather data' : 'Conversion result'}
                 >
                   <div className="text-xs font-semibold uppercase tracking-wider mb-2 text-accent">
                     {part.type === 'tool-weather' ? 'Weather Data' : 'Conversion Result'}

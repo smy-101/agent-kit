@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { MessageList } from './MessageList';
-import { ChatInput } from './ChatInput';
+import { ChatInput, ChatInputRef } from './ChatInput';
 
 export function ChatContainer() {
   const { messages, sendMessage } = useChat();
+  const inputRef = useRef<ChatInputRef>(null);
 
   const handleSubmit = useCallback((text: string) => {
     sendMessage({ text });
@@ -24,7 +25,7 @@ export function ChatContainer() {
 
       <MessageList messages={messages} />
 
-      <ChatInput onSubmit={handleSubmit} />
+      <ChatInput onSubmit={handleSubmit} ref={inputRef} />
     </div>
   );
 }

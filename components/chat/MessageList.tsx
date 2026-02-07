@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import type { UIMessage } from '@ai-sdk/react';
 import { MessageBubble } from './MessageBubble';
 
@@ -8,7 +8,7 @@ type Props = {
   messages: UIMessage[];
 };
 
-export function MessageList({ messages }: Props) {
+export const MessageList = memo(function MessageList({ messages }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -20,7 +20,12 @@ export function MessageList({ messages }: Props) {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth">
+    <div 
+      role="log" 
+      aria-live="polite" 
+      aria-label="Chat messages"
+      className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth"
+    >
       <div className="max-w-4xl mx-auto">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
@@ -38,4 +43,4 @@ export function MessageList({ messages }: Props) {
       </div>
     </div>
   );
-}
+});
