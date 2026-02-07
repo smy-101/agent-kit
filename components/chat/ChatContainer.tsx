@@ -1,17 +1,38 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState, useTransition } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { MessageList } from './MessageList';
 import { ChatInput, ChatInputRef } from './ChatInput';
 
 export function ChatContainer() {
-  const { messages, sendMessage } = useChat();
+  const { messages, sendMessage, setMessages } = useChat();
   const inputRef = useRef<ChatInputRef>(null);
+  const [isPending, startTransition] = useTransition();
+  const [contextEnabled, setContextEnabled] = useState(true);
 
   const handleSubmit = useCallback((text: string) => {
-    sendMessage({ text });
-  }, [sendMessage]);
+    if (contextEnabled) {
+      sendMessage({ text });
+    } else {
+      startTransition(() => {
+        const systemMessages = messages.filter(m => m.role === 'system');
+        setMessages(systemMessages);
+      });
+      sendMessage({ text });
+    }
+  }, [sendMessage, contextEnabled, messages, setMessages]);
+
+  const handleNewTopic = useCallback(() => {
+    startTransition(() => {
+      setMessages([]);
+    });
+    inputRef.current?.focus();
+  }, [setMessages]);
+
+  const toggleContext = useCallback(() => {
+    setContextEnabled(prev => !prev);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -25,7 +46,14 @@ export function ChatContainer() {
 
       <MessageList messages={messages} />
 
-      <ChatInput onSubmit={handleSubmit} ref={inputRef} />
+      <ChatInput 
+        onSubmit={handleSubmit} 
+        ref={inputRef}
+        contextEnabled={contextEnabled}
+        onToggleContext={toggleContext}
+        onNewTopic={handleNewTopic}
+        isClearing={isPending}
+      />
     </div>
   );
 }
