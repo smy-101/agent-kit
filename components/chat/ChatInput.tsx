@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, forwardRef } from 'react';
-import { Send } from 'lucide-react';
+import { Send, Plus } from 'lucide-react';
 
 export type ChatInputRef = {
   focus: () => void;
@@ -9,9 +9,10 @@ export type ChatInputRef = {
 
 type Props = {
   onSubmit: (text: string) => void;
+  onNewChat?: () => void;
 };
 
-export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ onSubmit }, ref) {
+export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ onSubmit, onNewChat }, ref) {
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -61,6 +62,18 @@ export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ on
   return (
     <div className="border-t border-border bg-background">
       <div className="max-w-4xl mx-auto p-4">
+        {onNewChat !== undefined && (
+          <div className="flex justify-end mb-2">
+            <button
+              onClick={onNewChat}
+              aria-label="开始新对话"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-accent hover:bg-accent/10 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:outline-none focus-visible:scale-95 transition-all duration-200 text-sm font-medium"
+            >
+              <Plus size={16} strokeWidth={2.5} />
+              <span>新话题</span>
+            </button>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="relative">
           <textarea
             ref={textareaRef}

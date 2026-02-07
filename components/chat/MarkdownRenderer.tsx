@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import DOMPurify from 'dompurify';
 
 // Dynamic imports for code splitting
 const ReactMarkdown = dynamic(() => import('react-markdown'), { 
@@ -63,11 +62,24 @@ export function MarkdownRenderer({ content }: Props) {
         remarkPlugins={[plugins.remarkGfm]}
         rehypePlugins={[plugins.rehypeHighlight]}
         components={{
-          pre: ({ children }) => {
-            const codeString = typeof children === 'string' 
-              ? children 
-              : React.Children.toArray(children).join('');
-            
+          pre({ children }: { children?: React.ReactNode }) {
+            // Extract text content from code block
+            const extractCodeFromPre = (node: React.ReactNode): string => {
+              if (typeof node === 'string') return node;
+              if (Array.isArray(node)) return node.map(extractCodeFromPre).join('');
+              if (node && typeof node === 'object' && 'props' in node) {
+                const element = node as React.ReactElement & { props?: { children?: React.ReactNode } };
+                // If it's a code element, extract its children
+                if (element.type === 'code') {
+                  return extractCodeFromPre(element.props?.children || '');
+                }
+                return extractCodeFromPre(element.props?.children || '');
+              }
+              return '';
+            };
+
+            const codeString = extractCodeFromPre(children);
+
             return (
               <div className="relative group">
                 <pre className="relative">{children}</pre>
@@ -82,18 +94,25 @@ export function MarkdownRenderer({ content }: Props) {
               </div>
             );
           },
-          code: ({ className, children }) => {
-            const content = typeof children === 'string' ? children : String(children);
-            const sanitizedContent = DOMPurify.sanitize(content, {
-              ALLOWED_TAGS: [],
-              ALLOWED_ATTR: []
-            });
-            
+          code({ className, children, ...props }: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            // Extract text content safely from React nodes
+            const getCodeContent = (node: React.ReactNode): string => {
+              if (typeof node === 'string') return node;
+              if (typeof node === 'number') return String(node);
+              if (Array.isArray(node)) return node.map(getCodeContent).join('');
+              if (node && typeof node === 'object' && 'props' in node) {
+                const element = node as React.ReactElement & { props?: { children?: React.ReactNode } };
+                return getCodeContent(element.props?.children);
+              }
+              return '';
+            };
+
+            const content = getCodeContent(children);
+
             return (
-              <code 
-                className={className}
-                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-              />
+              <code className={className} {...props}>
+                {content}
+              </code>
             );
           },
         }}

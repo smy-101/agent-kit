@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const { messages } = ChatRequestSchema.parse(body);
 
     const result = streamText({
-      model: openai.chat("deepseek-ai/DeepSeek-V3.2"),
+      model: openai.chat("ZhipuAI/GLM-4.7"),
       messages: await convertToModelMessages(messages),
       stopWhen: stepCountIs(5),
       tools: {
@@ -68,13 +68,13 @@ export async function POST(req: Request) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return Response.json(
-        { error: 'Invalid request', issues: error.issues }, 
+        { error: 'Invalid request', issues: error.issues },
         { status: 400 }
       );
     }
     console.error('Chat API error:', error);
     return Response.json(
-      { error: 'Internal server error' }, 
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

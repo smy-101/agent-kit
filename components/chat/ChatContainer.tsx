@@ -1,17 +1,24 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, startTransition } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { MessageList } from './MessageList';
 import { ChatInput, ChatInputRef } from './ChatInput';
 
 export function ChatContainer() {
-  const { messages, sendMessage } = useChat();
+  const { messages, sendMessage, setMessages } = useChat();
   const inputRef = useRef<ChatInputRef>(null);
 
   const handleSubmit = useCallback((text: string) => {
     sendMessage({ text });
   }, [sendMessage]);
+
+  const handleNewChat = useCallback(() => {
+    startTransition(() => {
+      setMessages([]);
+    });
+    inputRef.current?.focus();
+  }, [setMessages]);
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -25,7 +32,7 @@ export function ChatContainer() {
 
       <MessageList messages={messages} />
 
-      <ChatInput onSubmit={handleSubmit} ref={inputRef} />
+      <ChatInput onSubmit={handleSubmit} onNewChat={handleNewChat} ref={inputRef} />
     </div>
   );
 }
