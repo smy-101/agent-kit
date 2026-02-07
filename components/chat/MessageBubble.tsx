@@ -12,10 +12,10 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
   const isUser = message.role === 'user';
 
   return (
-    <div 
+    <div
       role="article"
       aria-label={`${isUser ? 'Your message' : 'AI response'}`}
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300`}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out`}
     >
       <div className={`max-w-[85%] rounded-2xl px-6 py-4 shadow-sm ${
         isUser

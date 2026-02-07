@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, forwardRef } from 'react';
+import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { Send, Plus } from 'lucide-react';
 
 export type ChatInputRef = {
@@ -16,14 +16,9 @@ export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ on
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Expose focus method
-  useEffect(() => {
-    if (ref && typeof ref !== 'function') {
-      ref.current = {
-        focus: () => textareaRef.current?.focus()
-      };
-    }
-  }, [ref]);
+  useImperativeHandle(ref, () => ({
+    focus: () => textareaRef.current?.focus()
+  }));
 
   const handleSubmit = useCallback((e?: React.FormEvent) => {
     e?.preventDefault();
@@ -46,18 +41,19 @@ export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ on
     }
   };
 
+  const adjustHeight = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      const newHeight = Math.min(textarea.scrollHeight, 200);
+      textarea.style.height = `${newHeight}px`;
+      textarea.style.overflowY = newHeight >= 200 ? 'auto' : 'hidden';
+    }
+  }, []);
+
   useEffect(() => {
-    const adjustHeight = () => {
-      const textarea = textareaRef.current;
-      if (textarea) {
-        textarea.style.height = 'auto';
-        const newHeight = Math.min(textarea.scrollHeight, 200);
-        textarea.style.height = `${newHeight}px`;
-        textarea.style.overflowY = newHeight >= 200 ? 'auto' : 'hidden';
-      }
-    };
     adjustHeight();
-  }, [input]);
+  }, [input, adjustHeight]);
 
   return (
     <div className="border-t border-border bg-background">
@@ -84,7 +80,7 @@ export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ on
             aria-label="Message input"
             aria-describedby="input-help"
             rows={1}
-            className="w-full resize-none rounded-2xl border border-border bg-code-bg px-5 py-4 pr-14 text-foreground placeholder:text-foreground/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:opacity-50 transition-all duration-200"
+            className="w-full resize-none rounded-2xl border border-border/60 bg-code-bg/50 backdrop-blur-sm px-5 py-4 pr-14 text-foreground placeholder:text-foreground/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10 focus:bg-code-bg disabled:opacity-50 transition-all duration-300 shadow-sm hover:border-border/80"
             style={{ minHeight: '56px', maxHeight: '200px', fontFamily: 'var(--font-inter)' }}
           />
           <button

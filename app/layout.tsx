@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
+        className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased noise-overlay`}
       >
         <a 
           href="#main-content"
