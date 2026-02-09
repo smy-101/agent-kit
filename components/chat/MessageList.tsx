@@ -20,19 +20,22 @@ export const MessageList = memo(function MessageList({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    const rafId = requestAnimationFrame(() => {
+      scrollToBottom();
+    });
+    return () => cancelAnimationFrame(rafId);
   }, [messages]);
 
   return (
-    <div 
-      role="log" 
-      aria-live="polite" 
+    <div
+      role="log"
+      aria-live="polite"
       aria-label="Chat messages"
-      className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth"
+      className="flex-1 overflow-y-auto px-4 py-6"
     >
       <div className="max-w-4xl mx-auto">
         {messages.length === 0 ? (
@@ -57,11 +60,10 @@ export const MessageList = memo(function MessageList({
           </div>
         ) : (
           messages.map(message => (
-            <MessageBubble 
-              key={message.id} 
-              message={message} 
+            <MessageBubble
+              key={message.id}
+              message={message}
               onRetry={message.role === 'assistant' ? onRetry : undefined}
-              isGenerating={isGenerating}
               regeneratingMessageId={regeneratingMessageId}
             />
           ))
