@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useEffect, startTransition } from 'react';
+import { useCallback, useRef, useEffect, startTransition, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { MessageList } from './MessageList';
 import { ChatInput, ChatInputRef } from './ChatInput';
@@ -8,6 +8,7 @@ import { ChatInput, ChatInputRef } from './ChatInput';
 export function ChatContainer() {
   const { messages, sendMessage, setMessages, status, stop, regenerate } = useChat();
   const inputRef = useRef<ChatInputRef>(null);
+  const [regeneratingMessageId, setRegeneratingMessageId] = useState<string | null>(null);
 
   const handleSubmit = useCallback((text: string) => {
     sendMessage({ text });
@@ -25,9 +26,15 @@ export function ChatContainer() {
     regenerateRef.current = regenerate;
   }, [regenerate]);
 
-  const handleRetry = useCallback((_messageId: string) => {
-    regenerateRef.current();
-  }, []);
+  const handleRetry = useCallback((messageId: string) => {
+    if (regeneratingMessageId) {
+      setRegeneratingMessageId(null);
+    }
+    setTimeout(() => {
+      setRegeneratingMessageId(messageId);
+      regenerateRef.current();
+    }, 0);
+  }, [regeneratingMessageId]);
 
   const isGenerating = status === 'streaming' || status === 'submitted';
 
@@ -45,6 +52,7 @@ export function ChatContainer() {
         messages={messages} 
         onRetry={handleRetry} 
         isGenerating={isGenerating}
+        regeneratingMessageId={regeneratingMessageId}
       />
 
       <ChatInput 

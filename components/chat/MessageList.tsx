@@ -8,9 +8,15 @@ type Props = {
   messages: UIMessage[];
   onRetry?: (messageId: string) => void;
   isGenerating?: boolean;
+  regeneratingMessageId?: string | null;
 };
 
-export const MessageList = memo(function MessageList({ messages, onRetry, isGenerating }: Props) {
+export const MessageList = memo(function MessageList({ 
+  messages, 
+  onRetry, 
+  isGenerating,
+  regeneratingMessageId
+}: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -56,6 +62,7 @@ export const MessageList = memo(function MessageList({ messages, onRetry, isGene
               message={message} 
               onRetry={message.role === 'assistant' ? onRetry : undefined}
               isGenerating={isGenerating}
+              regeneratingMessageId={regeneratingMessageId}
             />
           ))
         )}

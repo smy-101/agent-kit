@@ -8,12 +8,16 @@ import type { UIMessage } from '@ai-sdk/react';
 type Props = {
   message: UIMessage;
   onRetry?: (messageId: string) => void;
-  isGenerating?: boolean;
+  regeneratingMessageId?: string | null;
 };
 
-export const MessageBubble = memo(function MessageBubble({ message, onRetry, isGenerating }: Props) {
+export const MessageBubble = memo(function MessageBubble({ 
+  message, 
+  onRetry, 
+  regeneratingMessageId
+}: Props) {
   const isUser = message.role === 'user';
-  const isRetrying = isGenerating && !isUser;
+  const isRetrying = regeneratingMessageId === message.id;
 
   const handleRetry = useCallback(() => {
     if (onRetry) {
