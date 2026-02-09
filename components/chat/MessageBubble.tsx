@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { RotateCw } from 'lucide-react';
 import type { UIMessage } from '@ai-sdk/react';
@@ -8,18 +8,18 @@ import type { UIMessage } from '@ai-sdk/react';
 type Props = {
   message: UIMessage;
   onRetry?: (messageId: string) => void;
+  isGenerating?: boolean;
 };
 
-export const MessageBubble = memo(function MessageBubble({ message, onRetry }: Props) {
+export const MessageBubble = memo(function MessageBubble({ message, onRetry, isGenerating }: Props) {
   const isUser = message.role === 'user';
-  const [isRetrying, setIsRetrying] = useState(false);
+  const isRetrying = isGenerating && !isUser;
 
   const handleRetry = useCallback(() => {
-    if (onRetry && !isRetrying) {
-      setIsRetrying(true);
+    if (onRetry) {
       onRetry(message.id);
     }
-  }, [onRetry, message.id, isRetrying]);
+  }, [onRetry, message.id]);
 
   return (
     <div
@@ -74,9 +74,9 @@ export const MessageBubble = memo(function MessageBubble({ message, onRetry }: P
               aria-label="重新生成此消息"
               className="flex items-center gap-2 text-sm text-accent/70 hover:text-accent hover:bg-accent/10 px-3 py-2 rounded-lg transition-all duration-300 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed group/btn"
             >
-              <RotateCw 
-                size={14} 
-                strokeWidth={2.5} 
+              <RotateCw
+                size={14}
+                strokeWidth={2.5}
                 className={`transition-transform duration-500 ${isRetrying ? 'animate-spin' : 'group-hover/btn:rotate-180'}`}
               />
               <span className="font-medium">{isRetrying ? '重新生成中...' : '重新生成'}</span>

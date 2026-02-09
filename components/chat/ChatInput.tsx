@@ -10,7 +10,6 @@ export type ChatInputRef = {
 type Props = {
   onSubmit: (text: string) => void;
   onNewChat?: () => void;
-  status?: 'submitted' | 'streaming' | 'ready' | 'error';
   onStop?: () => void;
   isGenerating?: boolean;
 };
@@ -67,9 +66,9 @@ export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ on
               <button
                 onClick={onStop}
                 aria-label="停止生成"
-                className="group relative flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-accent text-background text-sm font-medium shadow-lg shadow-accent/20 hover:shadow-accent/30 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none transition-all duration-200"
+                className="group relative flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-accent text-background text-sm font-medium shadow-lg shadow-accent/20 hover:shadow-accent/30 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none transition-all duration-200 overflow-hidden"
               >
-                <span className="absolute inset-0 rounded-xl bg-accent/20 animate-ping" />
+                <div className="absolute inset-0 bg-accent/50 animate-pulse" />
                 <span className="relative flex items-center gap-2">
                   <Square size={15} strokeWidth={2.5} className="animate-pulse" />
                   <span>停止生成</span>

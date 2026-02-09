@@ -41,12 +41,15 @@ export function ChatContainer() {
         </div>
       </header>
 
-      <MessageList messages={messages} onRetry={handleRetry} />
+      <MessageList 
+        messages={messages} 
+        onRetry={handleRetry} 
+        isGenerating={isGenerating}
+      />
 
       <ChatInput 
         onSubmit={handleSubmit} 
         onNewChat={handleNewChat} 
-        status={status}
         onStop={stop}
         isGenerating={isGenerating}
         ref={inputRef} 

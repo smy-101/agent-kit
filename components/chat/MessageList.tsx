@@ -7,9 +7,10 @@ import { MessageBubble } from './MessageBubble';
 type Props = {
   messages: UIMessage[];
   onRetry?: (messageId: string) => void;
+  isGenerating?: boolean;
 };
 
-export const MessageList = memo(function MessageList({ messages, onRetry }: Props) {
+export const MessageList = memo(function MessageList({ messages, onRetry, isGenerating }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -54,6 +55,7 @@ export const MessageList = memo(function MessageList({ messages, onRetry }: Prop
               key={message.id} 
               message={message} 
               onRetry={message.role === 'assistant' ? onRetry : undefined}
+              isGenerating={isGenerating}
             />
           ))
         )}
