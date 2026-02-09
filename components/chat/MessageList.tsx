@@ -6,9 +6,10 @@ import { MessageBubble } from './MessageBubble';
 
 type Props = {
   messages: UIMessage[];
+  onRetry?: (messageId: string) => void;
 };
 
-export const MessageList = memo(function MessageList({ messages }: Props) {
+export const MessageList = memo(function MessageList({ messages, onRetry }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -48,7 +49,13 @@ export const MessageList = memo(function MessageList({ messages }: Props) {
             </div>
           </div>
         ) : (
-          messages.map(message => <MessageBubble key={message.id} message={message} />)
+          messages.map(message => (
+            <MessageBubble 
+              key={message.id} 
+              message={message} 
+              onRetry={message.role === 'assistant' ? onRetry : undefined}
+            />
+          ))
         )}
         <div ref={messagesEndRef} />
       </div>

@@ -1,12 +1,12 @@
 'use client';
 
-import { useCallback, useRef, startTransition } from 'react';
+import { useCallback, useRef, useEffect, startTransition } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { MessageList } from './MessageList';
 import { ChatInput, ChatInputRef } from './ChatInput';
 
 export function ChatContainer() {
-  const { messages, sendMessage, setMessages } = useChat();
+  const { messages, sendMessage, setMessages, status, stop, regenerate } = useChat();
   const inputRef = useRef<ChatInputRef>(null);
 
   const handleSubmit = useCallback((text: string) => {
@@ -20,6 +20,17 @@ export function ChatContainer() {
     inputRef.current?.focus();
   }, [setMessages]);
 
+  const regenerateRef = useRef(regenerate);
+  useEffect(() => {
+    regenerateRef.current = regenerate;
+  }, [regenerate]);
+
+  const handleRetry = useCallback((_messageId: string) => {
+    regenerateRef.current();
+  }, []);
+
+  const isGenerating = status === 'streaming' || status === 'submitted';
+
   return (
     <div className="flex flex-col h-screen bg-background">
       <header className="border-b border-border bg-background">
@@ -30,9 +41,16 @@ export function ChatContainer() {
         </div>
       </header>
 
-      <MessageList messages={messages} />
+      <MessageList messages={messages} onRetry={handleRetry} />
 
-      <ChatInput onSubmit={handleSubmit} onNewChat={handleNewChat} ref={inputRef} />
+      <ChatInput 
+        onSubmit={handleSubmit} 
+        onNewChat={handleNewChat} 
+        status={status}
+        onStop={stop}
+        isGenerating={isGenerating}
+        ref={inputRef} 
+      />
     </div>
   );
 }

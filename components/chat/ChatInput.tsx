@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { Send, Plus } from 'lucide-react';
+import { Send, Plus, Square } from 'lucide-react';
 
 export type ChatInputRef = {
   focus: () => void;
@@ -10,9 +10,12 @@ export type ChatInputRef = {
 type Props = {
   onSubmit: (text: string) => void;
   onNewChat?: () => void;
+  status?: 'submitted' | 'streaming' | 'ready' | 'error';
+  onStop?: () => void;
+  isGenerating?: boolean;
 };
 
-export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ onSubmit, onNewChat }, ref) {
+export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ onSubmit, onNewChat, onStop, isGenerating = false }, ref) {
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -58,16 +61,30 @@ export const ChatInput = forwardRef<ChatInputRef, Props>(function ChatInput({ on
   return (
     <div className="border-t border-border bg-background">
       <div className="max-w-4xl mx-auto p-4">
-        {onNewChat !== undefined && (
-          <div className="flex justify-end mb-2">
-            <button
-              onClick={onNewChat}
-              aria-label="开始新对话"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-accent hover:bg-accent/10 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:outline-none focus-visible:scale-95 transition-all duration-200 text-sm font-medium"
-            >
-              <Plus size={16} strokeWidth={2.5} />
-              <span>新话题</span>
-            </button>
+        {(onNewChat !== undefined || isGenerating) && (
+          <div className={`flex mb-2 ${isGenerating ? 'justify-center' : 'justify-end'}`}>
+            {isGenerating ? (
+              <button
+                onClick={onStop}
+                aria-label="停止生成"
+                className="group relative flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-accent text-background text-sm font-medium shadow-lg shadow-accent/20 hover:shadow-accent/30 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none transition-all duration-200"
+              >
+                <span className="absolute inset-0 rounded-xl bg-accent/20 animate-ping" />
+                <span className="relative flex items-center gap-2">
+                  <Square size={15} strokeWidth={2.5} className="animate-pulse" />
+                  <span>停止生成</span>
+                </span>
+              </button>
+            ) : onNewChat !== undefined ? (
+              <button
+                onClick={onNewChat}
+                aria-label="开始新对话"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-accent hover:bg-accent/10 active:scale-95 focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:outline-none transition-all duration-200 text-sm font-medium"
+              >
+                <Plus size={16} strokeWidth={2.5} />
+                <span>新话题</span>
+              </button>
+            ) : null}
           </div>
         )}
         <form onSubmit={handleSubmit} className="relative">
